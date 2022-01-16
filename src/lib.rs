@@ -75,7 +75,7 @@ impl Cat {
         }
     }
 
-    pub fn update(&mut self) {
+    pub fn update(&mut self, frame_count: u32) {
         if self.velocity == (0, 0) {
             self.state = 0;
         } else {
@@ -83,183 +83,86 @@ impl Cat {
                 self.position.0 as i16 + self.velocity.0 as i16,
                 self.position.1 as i16 + self.velocity.1 as i16,
             );
-            if new_position.0 < (SCREEN_SIZE - 16) as i16 && new_position.0 >= 0 {
+            if new_position.0 <= (SCREEN_SIZE - 16) as i16 && new_position.0 >= 0 {
                 self.position.0 = new_position.0 as usize;
             }
-            if new_position.1 < (SCREEN_SIZE - 16) as i16 && new_position.1 >= 0 {
+            if new_position.1 <= (SCREEN_SIZE - 16) as i16 && new_position.1 >= 0 {
                 self.position.1 = new_position.1 as usize;
             }
-            if self.state == 1 {
-                self.state = 2;
-            } else {
-                self.state = 1;
+            if frame_count % 15 == 0 {
+                if self.state == 1 {
+                    self.state = 2;
+                } else {
+                    self.state = 1;
+                }
             }
         }
         match self.state {
+            #[rustfmt::skip]
             0 => {
                 // Stand
-                self.sprite[1] = 0;
-                self.sprite[2] = 1;
-                self.sprite[16] = 0;
-                self.sprite[17] = 1;
-                self.sprite[18] = 4;
-                self.sprite[19] = 1;
-                // Row 11
-                self.sprite[185] = 3;
-                self.sprite[187] = 4;
-                self.sprite[188] = 3;
-                self.sprite[189] = 1;
-                // Row 12
-                self.sprite[200] = 4;
-                self.sprite[201] = 3;
-                self.sprite[203] = 4;
-                self.sprite[204] = 3;
-                self.sprite[205] = 1;
-                // Row 13
-                self.sprite[208] = 1;
-                self.sprite[209] = 3;
-                self.sprite[211] = 1;
-                self.sprite[212] = 3;
-                self.sprite[214] = 1;
-                self.sprite[216] = 1;
-                self.sprite[217] = 3;
-                self.sprite[219] = 1;
-                self.sprite[220] = 3;
-                self.sprite[221] = 1;
-                // Row 14
-                self.sprite[224] = 1;
-                self.sprite[225] = 4;
-                self.sprite[226] = 1;
-                self.sprite[227] = 1;
-                self.sprite[228] = 4;
-                self.sprite[229] = 1;
-                self.sprite[230] = 0;
-                self.sprite[231] = 0;
-                self.sprite[232] = 1;
-                self.sprite[233] = 4;
-                self.sprite[234] = 1;
-                self.sprite[235] = 1;
-                self.sprite[236] = 4;
-                self.sprite[237] = 1;
-                // Row 15
-                self.sprite[241] = 1;
-                self.sprite[242] = 0;
-                self.sprite[244] = 1;
-                self.sprite[245] = 0;
-                self.sprite[248] = 0;
-                self.sprite[249] = 1;
-                self.sprite[251] = 0;
-                self.sprite[252] = 1;
+                self.sprite = [
+                    0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0,
+                    0, 1, 4, 1, 0, 0, 1, 3, 1, 0, 0, 0, 0, 1, 3, 1,
+                    1, 3, 1, 0, 0, 0, 1, 4, 3, 1, 1, 1, 1, 3, 4, 1,
+                    1, 3, 1, 0, 0, 0, 1, 3, 4, 4, 4, 4, 4, 4, 3, 1,
+                    1, 3, 1, 0, 0, 0, 1, 4, 4, 3, 4, 4, 3, 4, 4, 1,
+                    1, 3, 1, 1, 1, 1, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1,
+                    1, 3, 4, 3, 3, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1,
+                    1, 3, 4, 3, 3, 4, 3, 4, 4, 4, 3, 1, 3, 4, 4, 1,
+                    1, 3, 4, 3, 3, 4, 3, 3, 4, 4, 4, 3, 4, 4, 1, 0,
+                    1, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 1, 0, 0,
+                    1, 3, 4, 3, 3, 4, 3, 3, 3, 3, 1, 1, 1, 1, 0, 0,
+                    1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 1, 0, 0,
+                    1, 3, 3, 4, 4, 4, 4, 4, 4, 3, 4, 4, 3, 1, 0, 0,
+                    1, 3, 3, 1, 3, 3, 1, 1, 1, 3, 1, 1, 3, 1, 0, 0,
+                    1, 4, 1, 1, 4, 1, 0, 0, 1, 4, 1, 1, 4, 1, 0, 0,
+                    0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0,
+                ];
             }
+            #[rustfmt::skip]
             1 => {
                 // Movement 1
-                self.sprite[1] = 1;
-                self.sprite[2] = 0;
-                self.sprite[16] = 1;
-                self.sprite[17] = 4;
-                self.sprite[18] = 1;
-                self.sprite[19] = 0;
-                // Row 11
-                self.sprite[185] = 3;
-                self.sprite[187] = 3;
-                self.sprite[188] = 1;
-                self.sprite[189] = 0;
-                // Row 12
-                self.sprite[200] = 4;
-                self.sprite[201] = 3;
-                self.sprite[203] = 3;
-                self.sprite[204] = 1;
-                self.sprite[205] = 0;
-                // Row 13
-                self.sprite[208] = 1;
-                self.sprite[209] = 3;
-                self.sprite[211] = 1;
-                self.sprite[212] = 1;
-                self.sprite[214] = 3;
-                self.sprite[216] = 1;
-                self.sprite[217] = 3;
-                self.sprite[219] = 3;
-                self.sprite[220] = 1;
-                self.sprite[221] = 0;
-                // Row 14
-                self.sprite[224] = 1;
-                self.sprite[225] = 4;
-                self.sprite[226] = 1;
-                self.sprite[227] = 0;
-                self.sprite[228] = 1;
-                self.sprite[229] = 4;
-                self.sprite[230] = 1;
-                self.sprite[231] = 0;
-                self.sprite[232] = 1;
-                self.sprite[233] = 4;
-                self.sprite[234] = 1;
-                self.sprite[235] = 4;
-                self.sprite[236] = 1;
-                self.sprite[237] = 0;
-                // Row 15
-                self.sprite[241] = 1;
-                self.sprite[242] = 0;
-                self.sprite[244] = 0;
-                self.sprite[245] = 1;
-                self.sprite[248] = 0;
-                self.sprite[249] = 1;
-                self.sprite[251] = 1;
-                self.sprite[252] = 0;
+                self.sprite = [
+                    0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0,
+                    1, 4, 1, 0, 0, 0, 1, 3, 1, 0, 0, 0, 0, 1, 3, 1,
+                    1, 3, 1, 0, 0, 0, 1, 4, 3, 1, 1, 1, 1, 3, 4, 1,
+                    1, 3, 1, 0, 0, 0, 1, 3, 4, 4, 4, 4, 4, 4, 3, 1,
+                    1, 3, 1, 0, 0, 0, 1, 4, 4, 3, 4, 4, 3, 4, 4, 1,
+                    1, 3, 1, 1, 1, 1, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1,
+                    1, 3, 4, 3, 3, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1,
+                    1, 3, 4, 3, 3, 4, 3, 4, 4, 4, 3, 1, 3, 4, 4, 1,
+                    1, 3, 4, 3, 3, 4, 3, 3, 4, 4, 4, 3, 4, 4, 1, 0,
+                    1, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 1, 0, 0,
+                    1, 3, 4, 3, 3, 4, 3, 3, 3, 3, 1, 1, 1, 1, 0, 0,
+                    1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 1, 0, 0, 0,
+                    1, 3, 3, 4, 4, 4, 4, 4, 4, 3, 4, 3, 1, 0, 0, 0,
+                    1, 3, 3, 1, 1, 3, 3, 1, 1, 3, 1, 3, 1, 0, 0, 0,
+                    1, 4, 1, 0, 1, 4, 1, 0, 1, 4, 1, 4, 1, 0, 0, 0,
+                    0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
+                ];
             }
+            #[rustfmt::skip]
             2 => {
                 // Movement 2
-                self.sprite[1] = 0;
-                self.sprite[2] = 1;
-                self.sprite[16] = 0;
-                self.sprite[17] = 1;
-                self.sprite[18] = 4;
-                self.sprite[19] = 1;
-                // Row 11
-                self.sprite[185] = 4;
-                self.sprite[187] = 4;
-                self.sprite[188] = 3;
-                self.sprite[189] = 1;
-                // Row 12
-                self.sprite[200] = 3;
-                self.sprite[201] = 4;
-                self.sprite[203] = 4;
-                self.sprite[204] = 3;
-                self.sprite[205] = 1;
-                // Row 13
-                self.sprite[208] = 0;
-                self.sprite[209] = 1;
-                self.sprite[211] = 3;
-                self.sprite[212] = 1;
-                self.sprite[214] = 1;
-                self.sprite[216] = 3;
-                self.sprite[217] = 1;
-                self.sprite[219] = 1;
-                self.sprite[220] = 3;
-                self.sprite[221] = 1;
-                // Row 14
-                self.sprite[224] = 0;
-                self.sprite[225] = 1;
-                self.sprite[226] = 4;
-                self.sprite[227] = 1;
-                self.sprite[228] = 4;
-                self.sprite[229] = 1;
-                self.sprite[230] = 0;
-                self.sprite[231] = 1;
-                self.sprite[232] = 4;
-                self.sprite[233] = 1;
-                self.sprite[234] = 0;
-                self.sprite[235] = 1;
-                self.sprite[236] = 4;
-                self.sprite[237] = 1;
-                // Row 15
-                self.sprite[241] = 0;
-                self.sprite[242] = 1;
-                self.sprite[244] = 1;
-                self.sprite[245] = 0;
-                self.sprite[248] = 1;
-                self.sprite[249] = 0;
-                self.sprite[251] = 0;
-                self.sprite[252] = 1;
+                self.sprite = [
+                    0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0,
+                    0, 1, 4, 1, 0, 0, 1, 3, 1, 0, 0, 0, 0, 1, 3, 1,
+                    1, 3, 1, 0, 0, 0, 1, 4, 3, 1, 1, 1, 1, 3, 4, 1,
+                    1, 3, 1, 0, 0, 0, 1, 3, 4, 4, 4, 4, 4, 4, 3, 1,
+                    1, 3, 1, 0, 0, 0, 1, 4, 4, 3, 4, 4, 3, 4, 4, 1,
+                    1, 3, 1, 1, 1, 1, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1,
+                    1, 3, 4, 3, 3, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1,
+                    1, 3, 4, 3, 3, 4, 3, 4, 4, 4, 3, 1, 3, 4, 4, 1,
+                    1, 3, 4, 3, 3, 4, 3, 3, 4, 4, 4, 3, 4, 4, 1, 0,
+                    1, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 1, 0, 0,
+                    1, 3, 4, 3, 3, 4, 3, 3, 3, 3, 1, 1, 1, 1, 0, 0,
+                    1, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3, 1, 0, 0,
+                    1, 3, 3, 4, 4, 4, 4, 4, 3, 4, 4, 4, 3, 1, 0, 0,
+                    0, 1, 3, 3, 1, 3, 1, 1, 3, 1, 1, 1, 3, 1, 0, 0,
+                    0, 1, 4, 1, 4, 1, 0, 1, 4, 1, 0, 1, 4, 1, 0, 0,
+                    0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+                ];
             }
             _ => {}
         }
@@ -300,8 +203,8 @@ fn update() {
         GAME.update();
         GAME.input();
 
-        if GAME.frame_count % 15 == 0 {
-            GAME.cat.update();
+        if GAME.frame_count % 3 == 0 {
+            GAME.cat.update(GAME.frame_count);
         }
         GAME.cat.draw();
     }

@@ -13,5 +13,8 @@ Cargo.lock
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
 
-# Do not commit yet
-assets/
+# Asset sources
+assets_src/
+
+# Mac
+.DS_Store
